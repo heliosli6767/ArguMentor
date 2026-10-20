@@ -5,7 +5,7 @@ Date: 2026-10-20.
 ## Automated and HTTP
 
 - TypeScript check and Vite production bundle.
-- Seven Node tests: original ArguMentor four-turn state progression; demonstration side and scoring boundaries; grounded quotes; bounded request validation; actual Argdown support/attack parsing including sanitized input; gradual assessed progression; rejection of empty/heading-only diagrams.
+- Twelve Node tests: original ArguMentor four-turn state progression; demonstration side and scoring boundaries; grounded quotes; bounded request validation; actual Argdown support/attack parsing including sanitized input; gradual assessed progression; rejection of empty/heading-only diagrams; eight-lesson coverage; round-specific coaching; pre-debate model cases; session-to-drill recommendations.
 - HTTP root returned 200.
 - `/api/status` reports no provider when no key is configured, without leaking secrets.
 - Live turn without a key returned 503 with an actionable message.
@@ -22,6 +22,7 @@ Date: 2026-10-20.
 - Topic search for “AI” returned the Level 5 writing topic.
 - Narrow-screen menu and topic search worked; measured 391 CSS pixels with no document horizontal overflow. A 520 CSS pixel layout was also checked.
 - Desktop screenshot checked for composition. Instructional text contrast and sizes were then increased.
+- Learning Hub, annotated lesson, pre-debate briefing, case planner, four round-specific coach panels, skill coverage and the recommended-lesson handoff were walked through in the browser.
 
 ## Not yet verified
 

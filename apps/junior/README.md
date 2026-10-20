@@ -19,8 +19,11 @@ With no key, an explicit demonstration mode provides curated opposing points and
 ## Included
 
 - 50 curated topics across five gradual levels, with ten motions at each level.
+- An eight-lesson Learning Hub covering complete cases, warrants, rebuttal, weighing, questioning, summary, final focus and evidence honesty. Each lesson includes a weak/strong comparison, annotated model and mini drill.
+- A pre-debate briefing for every motion with model pro/con cases, the central clash, purposeful questions and a private four-link case planner.
 - Four-speech practice with optional timer, writing scaffolds, vocabulary and editable dictation.
-- Round-specific coaching, quoted evidence and English rewrites when a model is connected.
+- A five-step in-round hint ladder plus round-specific structure checks in both demonstration and live modes. Live coaching adds contextual evaluation, grounded quotations and English rewrites.
+- A richer post-debate coach report: best move, next priority, skill coverage by round, per-speech diagnostics and a linked six-minute lesson.
 - Dual-path voice input: browser speech recognition when available, or local MediaRecorder transcription through OpenAI when `OPENAI_API_KEY` is configured. The app does not store audio.
 - Per-browser drafts, unfinished sessions and review history, plus JSON exports.
 - Argdown graph, node inspection, editable Argdown and `.argdown` download.
@@ -30,7 +33,7 @@ The static private hosted edition has the same interface and demonstration exerc
 
 ## Verification
 
-`npm test` covers the upstream state machine integration, demonstration-mode scoring boundaries, side selection, input validation, quote grounding, and real Argdown parsing. `npm run build` includes TypeScript validation.
+`npm test` covers the upstream state machine integration, demonstration-mode scoring boundaries, side selection, input validation, quote grounding, real Argdown parsing, the eight-lesson sequence, round-specific diagnostic expectations, model briefings and session-to-drill recommendations. `npm run build` includes TypeScript validation.
 
 ## Design
 
@@ -40,6 +43,8 @@ Based on the previously downloaded `frontend-design` skill in the Starlux projec
 
 - ArguMentor by Arshia Keshvari: https://github.com/TeslaNeuro/ArguMentor — MIT. Upstream commit at initial checkout: `1f8bae23e29eed30d32f95646b803b29db9c492d`. Original repository and license retained.
 - DebateSim: https://github.com/alexliao95311/DebateSim — referenced for its opponent/coach separation and round-specific Public Forum feedback; no source files copied.
+- Argupedia: https://github.com/HumphreyCurtis/Argupedia and Reasons: https://github.com/davekinkead/reasons — referenced for making support, attack and critical questions visible; no source files copied.
+- DebateUS Public Forum guides: https://debateus.org/public-forum/ — referenced for constructive, rebuttal, summary, final-focus and weighing pedagogy; no text copied.
 - Argdown: https://github.com/argdown/argdown — MIT; used through `@argdown/core`.
 - Lucide icons — ISC. React — MIT.
 

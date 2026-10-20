@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { addTurn, createSession, demoTurn, makeArgdown, recommendedLevel, requestSchema, normalizeQuote } from "./learning";
 import { topics } from "./curriculum";
 import { parseGraph } from "./ArgumentMap";
+import { academyLessons, analyseSpeech, buildModelCase, getSessionReport } from "./pedagogy";
 
 test("ArguMentor state machine completes exactly four child practice turns", () => {
   let session = createSession(topics[0], "pro");
@@ -67,4 +68,39 @@ test("curriculum has ten English-only motions at every level", () => {
   for(let level=1;level<=5;level++)assert.equal(topics.filter(topic=>topic.level===level).length,10);
   const visibleCurriculum=topics.flatMap(topic=>[topic.title,topic.subtitle,topic.context,...topic.vocabulary.flat(),...topic.pro,...topic.con,...topic.questions.pro,...topic.questions.con]).join(" ");
   assert.doesNotMatch(visibleCurriculum,/[一-龥]/);
+});
+
+test("learning hub contains a complete English debate-skills sequence", () => {
+  assert.equal(academyLessons.length,8);
+  assert.deepEqual(academyLessons.map(l=>l.id),["case","warrant","rebuttal","weighing","questions","summary","final","evidence"]);
+  assert.doesNotMatch(JSON.stringify(academyLessons),/[一-龥]/);
+  assert.ok(academyLessons.every(l=>l.strong.length>l.weak.length&&l.whyStrong.length>=3));
+});
+
+test("round coaching changes its expectations by speech purpose", () => {
+  const constructive=analyseSpeech("I think recess should be longer because movement helps. For example, imagine a short outdoor break. This matters because students can focus.",0);
+  assert.ok(constructive.filter(c=>c.expected).every(c=>c.found));
+  const rebuttal=analyseSpeech("You said lessons need every minute, but short movement can improve focus. This matters because the class may use later time better.",1);
+  assert.ok(rebuttal.find(c=>c.id==="response")?.found);
+  const finalFocus=analyseSpeech("Choose our side. Even if time is lost, focus matters more because it affects every lesson. To sum up, this is the better rule.",3);
+  assert.ok(finalFocus.find(c=>c.id==="weighing")?.found);
+  assert.ok(finalFocus.find(c=>c.id==="signpost")?.found);
+});
+
+test("briefings provide labelled model structure for both sides", () => {
+  const pro=buildModelCase(topics[0],"pro"),con=buildModelCase(topics[0],"con");
+  assert.match(pro.speech,/support the motion/i);
+  assert.match(con.speech,/oppose the motion/i);
+  assert.match(pro.example,/Imagine/);
+});
+
+test("session report turns visible structure into a practice recommendation", () => {
+  let session=createSession(topics[0],"pro");
+  const text="I think weekends should be homework-free because children need rest.";
+  const result=demoTurn({topicId:"homework",level:1,text,side:"pro",demo:true,history:[]});
+  session=addTurn(session,{...result,user:text,round:1,at:new Date().toISOString()});
+  const report=getSessionReport(session);
+  assert.equal(report.priority?.id,"example");
+  assert.equal(report.lesson.id,"evidence");
+  assert.ok(report.bestLine.includes("because"));
 });
