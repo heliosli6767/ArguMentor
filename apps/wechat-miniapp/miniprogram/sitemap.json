@@ -1,0 +1,1 @@
+{ "desc": "Child-focused learning pages are not indexed.", "rules": [{ "action": "disallow", "page": "*" }] }

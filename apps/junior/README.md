@@ -2,6 +2,8 @@
 
 An independent child-focused frontend inside the ArguMentor repository. It reuses the upstream debate configuration schema and state reducer, adapts four speeches from Public Forum (Constructive, Rebuttal, Summary, Final focus), and uses the actual `@argdown/core` parser/model plugins for review.
 
+This is now the reference Web shell in the multi-platform Junior architecture. Portable transport types live in `packages/junior-contracts`; the WeChat shell is in `apps/wechat-miniapp`, the shared iOS/Android shell is in `apps/mobile`, and the future trusted service boundary is documented in `services/junior-api`.
+
 ## Run locally
 
 ```sh

@@ -79,13 +79,20 @@ Get an OpenRouter key at [openrouter.ai/keys](https://openrouter.ai/keys).
 
 ```text
 ArguMentor/
-├── 🌐 apps/web              Next.js web app
-├── 🧠 packages/debate-core  Debate state machine, schemas, prompts
-├── 🤖 packages/agents       Opponent · Judge · Analysis · Coach · Research
-├── 🗄️ packages/db           Persistence
-├── 🎨 packages/ui           Shared design tokens
-└── ⚙️ packages/config       Shared TypeScript config
+├── 🌐 apps/web                 Original Next.js product
+├── 🧒 apps/junior              Junior Web reference app
+├── 💬 apps/wechat-miniapp      Junior native WeChat shell
+├── 📱 apps/mobile              Junior Expo shell for iOS + Android
+├── 📐 packages/junior-contracts Portable Junior DTOs and phase rules
+├── 🧠 packages/debate-core     Debate state machine, schemas, prompts
+├── 🤖 packages/agents          Opponent · Judge · Analysis · Coach · Research
+├── 🗄️ packages/db              Persistence
+├── 🎨 packages/ui              Shared design primitives
+├── 🔐 services/junior-api      Trusted API contract and extraction target
+└── 📚 docs/junior-platform     Cross-platform architecture and roadmap
 ```
+
+The Junior ecosystem follows “one learning core, many native shells.” See [the detailed multi-platform map](docs/junior-platform/README.md).
 
 ## 🧰 Stack
 
@@ -103,6 +110,7 @@ ArguMentor/
 | `pnpm --filter @argumentor/web dev` | 🟢 Run the web app |
 | `pnpm test` | ✅ Run tests |
 | `pnpm build` | 🏗️ Production build |
+| `pnpm junior:check` | 🧭 Verify Junior structure, client-secret boundary, tests and Web build |
 
 ## 📚 Docs
 

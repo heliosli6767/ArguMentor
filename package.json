@@ -13,7 +13,8 @@
     "db:generate": "pnpm --filter @argumentor/db generate",
     "db:push": "pnpm --filter @argumentor/db push",
     "db:studio": "pnpm --filter @argumentor/db studio",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "junior:check": "node tools/check-junior-architecture.mjs && npm --prefix apps/junior test && npm --prefix apps/junior run build"
   },
   "devDependencies": {
     "@argumentor/typescript-config": "workspace:*",

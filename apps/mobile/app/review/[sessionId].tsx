@@ -1,0 +1,5 @@
+import { Link } from "expo-router";
+import { Pressable, Text } from "react-native";
+import { Card, Screen, ui } from "../../src/components/Screen";
+import { sessionRepository } from "../../src/storage/session";
+export default function Review(){const session=sessionRepository.read();if(!session)return <Screen title="No practice to review"><Text style={ui.body}>Complete a debate first.</Text></Screen>;const best=session.turns.at(-1)?.user||"Complete another round.";return <Screen eyebrow="COACH REPORT" title="Your ideas are worth hearing."><Text style={ui.body}>{session.title}</Text><Card><Text style={ui.meta}>BEST MOVE</Text><Text style={ui.body}>“{best}”</Text></Card><Card><Text style={ui.meta}>NEXT PRIORITY</Text><Text style={ui.heading}>Make the link more precise</Text><Text style={ui.body}>Explain why your example proves the claim, then compare it with the other side.</Text></Card><Link href="/lesson/2" asChild><Pressable style={ui.softButton}><Text style={ui.softButtonText}>Open recommended lesson</Text></Pressable></Link></Screen>}

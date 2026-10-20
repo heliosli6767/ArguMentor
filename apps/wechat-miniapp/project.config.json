@@ -1,0 +1,13 @@
+{
+  "description": "ArguMentor Junior WeChat Mini Program",
+  "miniprogramRoot": "miniprogram/",
+  "projectname": "argumentor-junior",
+  "appid": "touristappid",
+  "setting": {
+    "useCompilerPlugins": ["typescript"],
+    "es6": true,
+    "minified": true,
+    "urlCheck": true
+  },
+  "compileType": "miniprogram"
+}

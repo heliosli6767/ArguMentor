@@ -1,5 +1,9 @@
 packages:
   - "apps/*"
+  # The private static Junior Site is intentionally npm-managed and deployed on
+  # its own; excluding it prevents a workspace install from replacing its local
+  # dependencies while the other clients are being developed.
+  - "!apps/junior"
   - "packages/*"
 
 # pnpm 11+ settings (formerly package.json#pnpm / .npmrc)

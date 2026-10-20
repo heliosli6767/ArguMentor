@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: ArguMentor Junior API
+  version: 0.1.0
+servers:
+  - url: https://api.example.invalid
+paths:
+  /api/v1/status:
+    get:
+      operationId: getStatus
+      responses:
+        "200":
+          description: Available capabilities
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Status" }
+  /api/v1/debate/turns:
+    post:
+      operationId: submitTurn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TurnRequest" }
+      responses:
+        "200":
+          description: Opponent reply and formative feedback
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TurnResponse" }
+        "400": { description: Invalid request }
+        "429": { description: Rate limited }
+  /api/v1/transcriptions:
+    post:
+      operationId: transcribeSpeech
+      description: Accepts a bounded audio body. Audio is not retained by default.
+      responses:
+        "200": { description: English transcript }
+        "413": { description: Audio is too large }
+  /api/v1/sync:
+    post:
+      operationId: syncLearnerProgress
+      description: Future authenticated, conflict-aware progress synchronization.
+      responses:
+        "200": { description: Merged progress snapshot }
+components:
+  schemas:
+    Status:
+      type: object
+      required: [live, transcription, provider]
+      properties:
+        live: { type: boolean }
+        transcription: { type: boolean }
+        provider: { type: [string, "null"] }
+    TurnRequest:
+      type: object
+      required: [topicId, side, level, text, demo, history]
+      properties:
+        topicId: { type: string }
+        side: { enum: [pro, con] }
+        level: { type: integer, minimum: 1, maximum: 5 }
+        text: { type: string, minLength: 2, maxLength: 2500 }
+        demo: { type: boolean }
+        history:
+          type: array
+          maxItems: 3
+          items:
+            type: object
+            required: [user, opponent]
+            properties:
+              user: { type: string }
+              opponent: { type: string }
+    TurnResponse:
+      type: object
+      required: [opponent, feedback, mode]
+      properties:
+        opponent: { type: string }
+        mode: { enum: [demo, live] }
+        feedback:
+          type: object
+          required: [strength, improvement, rewrite, nextStep, evidenceQuote, languageNote, scores]
+          properties:
+            strength: { type: string }
+            improvement: { type: string }
+            rewrite: { type: string }
+            nextStep: { type: string }
+            evidenceQuote: { type: string }
+            languageNote: { type: string }
+            scores: { type: [object, "null"] }

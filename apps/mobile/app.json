@@ -1,29 +1,29 @@
 {
-  "name": "ArguMentor",
-  "slug": "argumentor",
+  "name": "ArguMentor Junior",
+  "slug": "argumentor-junior",
   "version": "0.1.0",
   "orientation": "portrait",
   "scheme": "argumentor",
-  "userInterfaceStyle": "dark",
+  "userInterfaceStyle": "light",
   "splash": {
     "resizeMode": "contain",
-    "backgroundColor": "#0e1512"
+    "backgroundColor": "#F3F5F8"
   },
   "ios": {
     "supportsTablet": true,
-    "bundleIdentifier": "app.argumentor.mobile"
+    "bundleIdentifier": "app.argumentor.junior"
   },
   "android": {
     "adaptiveIcon": {
-      "backgroundColor": "#0e1512"
+      "backgroundColor": "#F3F5F8"
     },
-    "package": "app.argumentor.mobile"
+    "package": "app.argumentor.junior"
   },
   "plugins": ["expo-router"],
   "experiments": {
     "typedRoutes": true
   },
   "extra": {
-    "apiBaseUrl": "http://localhost:3000"
+    "apiBaseUrl": ""
   }
 }

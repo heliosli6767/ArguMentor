@@ -1,0 +1,10 @@
+{
+  "name": "@argumentor/junior-wechat",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"Open apps/wechat-miniapp in WeChat DevTools\"",
+    "typecheck": "echo \"Type-check through WeChat DevTools until CI typings are enabled\"",
+    "lint": "echo \"no lint\""
+  }
+}

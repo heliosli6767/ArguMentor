@@ -4,8 +4,9 @@ import {
   type DebateSessionState
 } from "../../../packages/debate-core/src/index";
 import { topics, levels, phases, type Topic } from "./curriculum";
+import type { Side } from "../../../packages/junior-contracts/src/index";
 
-export type Side = "pro" | "con";
+export type { Side } from "../../../packages/junior-contracts/src/index";
 export type Feedback = {
   strength: string; improvement: string; rewrite: string; nextStep: string;
   evidenceQuote: string; languageNote: string;

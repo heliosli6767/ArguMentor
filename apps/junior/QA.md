@@ -30,3 +30,11 @@ Date: 2026-10-20.
 - Microphone and spoken playback were not exercised; permission and browser support must be tested by the user.
 - The private hosted edition is static and intentionally demonstration-only. Live model routes run on the local Express server.
 - No persistent server database or cross-device sync in this version.
+
+## Multi-platform scaffold
+
+- Repository architecture check passed: all required Web, WeChat, mobile, shared-contract, API-contract and decision-document paths exist.
+- Client secret scan passed for all three product shells.
+- Shared Junior contracts passed TypeScript and Node contract tests.
+- The existing Web shell passed all twelve learning/debate tests and produced a Vite production build after adopting the shared `Side` contract.
+- The WeChat and Expo shells are offline-first scaffolds. Full native compilation remains a release-stage check because WeChat DevTools, Expo dependencies, AppIDs and signing accounts are not configured in this workspace.

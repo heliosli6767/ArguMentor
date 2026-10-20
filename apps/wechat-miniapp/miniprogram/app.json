@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/learn/index",
+    "pages/topics/index",
+    "pages/briefing/index",
+    "pages/debate/index",
+    "pages/review/index",
+    "pages/profile/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "ArguMentor Junior",
+    "navigationBarBackgroundColor": "#F3F5F8",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F3F5F8"
+  },
+  "tabBar": {
+    "color": "#7A8798",
+    "selectedColor": "#55779F",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      { "pagePath": "pages/home/index", "text": "Practice" },
+      { "pagePath": "pages/learn/index", "text": "Learn" },
+      { "pagePath": "pages/topics/index", "text": "Motions" },
+      { "pagePath": "pages/profile/index", "text": "Parent" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
