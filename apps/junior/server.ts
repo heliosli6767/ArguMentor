@@ -7,29 +7,53 @@ import { topics } from "./src/curriculum";
 
 const app = express();
 app.disable("x-powered-by");
-app.use(express.json({ limit: "24kb" }));
 app.use((_req, res, next) => { res.setHeader("Cache-Control", "no-store"); res.setHeader("X-Content-Type-Options", "nosniff"); next(); });
-const key = process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || "";
+const openAIKey = process.env.OPENAI_API_KEY || "";
+const key = process.env.OPENROUTER_API_KEY || openAIKey;
 const router = Boolean(process.env.OPENROUTER_API_KEY);
 const model = process.env.DEBATE_MODEL || (router ? "openai/gpt-4.1-mini" : "gpt-4.1-mini");
-app.get("/api/status", (_req, res) => { res.json({ live: Boolean(key), provider: key ? router ? "OpenRouter" : "OpenAI" : null }); });
+const sameOrigin = (req: express.Request) => {
+  const origin = req.headers.origin;
+  return !origin || origin === `http://${req.headers.host}` || origin === `https://${req.headers.host}`;
+};
+app.get("/api/status", (_req, res) => { res.json({ live: Boolean(key), transcription: Boolean(openAIKey), provider: key ? router ? "OpenRouter" : "OpenAI" : null }); });
+app.post("/api/transcribe", express.raw({ type: ["audio/webm", "audio/mp4", "audio/ogg", "audio/mpeg", "audio/wav"], limit: "12mb" }), async (req, res) => {
+  if (!sameOrigin(req)) { res.status(403).json({ error: "Please record from the practice page." }); return; }
+  if (!openAIKey) { res.status(503).json({ error: "Voice transcription needs OPENAI_API_KEY in the local app. Browser speech recognition may still work in Chrome." }); return; }
+  if (!Buffer.isBuffer(req.body) || req.body.length < 100) { res.status(400).json({ error: "No usable recording was received." }); return; }
+  try {
+    const mime = String(req.headers["content-type"] || "audio/webm").split(";")[0];
+    const extension: Record<string,string> = { "audio/webm":"webm", "audio/mp4":"mp4", "audio/ogg":"ogg", "audio/mpeg":"mp3", "audio/wav":"wav" };
+    const form = new FormData();
+    const audio = new Uint8Array(req.body.byteLength); audio.set(req.body);
+    form.append("file", new Blob([audio.buffer], { type: mime }), `debate.${extension[mime] || "webm"}`);
+    form.append("model", process.env.TRANSCRIBE_MODEL || "gpt-4o-mini-transcribe");
+    form.append("language", "en");
+    form.append("prompt", "A school English debate by a grade-six learner. Preserve the learner's own wording.");
+    const response = await fetch("https://api.openai.com/v1/audio/transcriptions", { method:"POST", headers:{ Authorization:`Bearer ${openAIKey}` }, body:form, signal:AbortSignal.timeout(45000) });
+    if (!response.ok) { res.status(502).json({ error:`Transcription is temporarily unavailable (${response.status}). Your recording was not stored.` }); return; }
+    const data = await response.json() as { text?: string };
+    if (!data.text?.trim()) { res.status(502).json({ error:"No speech was detected. Please try again closer to the microphone." }); return; }
+    res.json({ text:data.text.trim() });
+  } catch { res.status(502).json({ error:"Transcription failed. The recording was not stored; please try again or type your response." }); }
+});
+app.use(express.json({ limit: "24kb" }));
 const requests = new Map<string, number[]>();
 let inflight = 0;
 app.post("/api/turn", async (req, res) => {
   // Same-origin only; do not accept cross-site POSTs to a local API with a parent key.
-  const origin = req.headers.origin;
-  if (origin && origin !== `http://${req.headers.host}` && origin !== `https://${req.headers.host}`) { res.status(403).json({ error: "请在练习网页中提交。" }); return; }
+  if (!sameOrigin(req)) { res.status(403).json({ error: "Please submit from the practice page." }); return; }
   const result = requestSchema.safeParse(req.body);
-  if (!result.success || !topics.some(t => t.id === result.data?.topicId)) { res.status(400).json({ error: "请检查议题和发言内容。" }); return; }
+  if (!result.success || !topics.some(t => t.id === result.data?.topicId)) { res.status(400).json({ error: "Please check the motion and your response." }); return; }
   const input = result.data;
   const topic = topics.find(t => t.id === input.topicId)!;
   input.level = topic.level; // Never trust a client to bypass the curriculum.
   if (input.demo) { res.json(demoTurn(input)); return; }
-  if (!key) { res.status(503).json({ error: "还没有连接模型。请让家长在本地配置密钥，或返回选择示范练习。" }); return; }
+  if (!key) { res.status(503).json({ error: "No model is connected. Ask a parent to configure a local API key, or choose Demonstration mode." }); return; }
   const now = Date.now();
   const ip = req.ip || "local";
   const recent = (requests.get(ip) || []).filter(t => now - t < 60000);
-  if (recent.length >= 12 || inflight >= 2) { res.status(429).json({ error: "请稍等片刻再提交。" }); return; }
+  if (recent.length >= 12 || inflight >= 2) { res.status(429).json({ error: "Please wait a moment before submitting again." }); return; }
   recent.push(now); requests.set(ip, recent); inflight++;
   try {
     const response = await fetch(router ? "https://openrouter.ai/api/v1/chat/completions" : "https://api.openai.com/v1/chat/completions", {
@@ -37,13 +61,13 @@ app.post("/api/turn", async (req, res) => {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: JSON.stringify({ model, messages: [{ role: "system", content: buildPrompt(input) }, { role: "user", content: JSON.stringify({ history: input.history, speech: input.text }) }], response_format: { type: "json_object" }, max_tokens: 1300 })
     });
-    if (!response.ok) { res.status(502).json({ error: `模型服务暂时不可用（${response.status}）。发言已保留，可稍后重试。` }); return; }
+    if (!response.ok) { res.status(502).json({ error: `The model service is temporarily unavailable (${response.status}). Your draft is still here.` }); return; }
     const data = await response.json() as { choices?: { message?: { content?: string } }[] };
     const content = data.choices?.[0]?.message?.content || "";
     const parsed = responseSchema.parse(JSON.parse(content.replace(/^```json\s*|\s*```$/g, "")));
     res.json({ ...parsed, feedback: normalizeQuote(parsed.feedback, input.text), mode: "live" });
   } catch {
-    res.status(502).json({ error: "这次没有收到完整反馈。发言已保留，请重试；不会用示范内容代替真实反馈。" });
+    res.status(502).json({ error: "The model did not return complete feedback. Your draft is still here; please try again." });
   } finally { inflight--; }
 });
 const root = path.dirname(fileURLToPath(import.meta.url));

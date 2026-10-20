@@ -18,10 +18,10 @@ With no key, an explicit demonstration mode provides curated opposing points and
 
 ## Included
 
-- 20 curated topics across five gradual levels.
+- 50 curated topics across five gradual levels, with ten motions at each level.
 - Four-speech practice with optional timer, writing scaffolds, vocabulary and editable dictation.
 - Round-specific coaching, quoted evidence and English rewrites when a model is connected.
-- Browser speech recognition and speech synthesis; actual microphone availability depends on browser, permission and network.
+- Dual-path voice input: browser speech recognition when available, or local MediaRecorder transcription through OpenAI when `OPENAI_API_KEY` is configured. The app does not store audio.
 - Per-browser drafts, unfinished sessions and review history, plus JSON exports.
 - Argdown graph, node inspection, editable Argdown and `.argdown` download.
 - Progress recommends the next level after two completed live sessions with all four feedback dimensions at least 3/5. Parents may select any level.

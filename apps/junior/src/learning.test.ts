@@ -61,3 +61,10 @@ test("Argdown editor rejects input with no statements", async () => {
   await assert.rejects(parseGraph(""));
   await assert.rejects(parseGraph("# Only a heading\n"));
 });
+
+test("curriculum has ten English-only motions at every level", () => {
+  assert.equal(topics.length,50);
+  for(let level=1;level<=5;level++)assert.equal(topics.filter(topic=>topic.level===level).length,10);
+  const visibleCurriculum=topics.flatMap(topic=>[topic.title,topic.subtitle,topic.context,...topic.vocabulary.flat(),...topic.pro,...topic.con,...topic.questions.pro,...topic.questions.con]).join(" ");
+  assert.doesNotMatch(visibleCurriculum,/[一-龥]/);
+});
