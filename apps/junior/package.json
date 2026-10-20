@@ -1,0 +1,30 @@
+{
+  "name": "argumentor-junior",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --env-file-if-exists=.env.local server.ts",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx --env-file-if-exists=.env.local server.ts --production",
+    "test": "tsx --test src/learning.test.ts"
+  },
+  "dependencies": {
+    "@argdown/core": "2.0.1",
+    "express": "^5.1.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}
